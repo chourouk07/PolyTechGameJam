@@ -20,9 +20,12 @@ public class SpawnManager : MonoBehaviour
     #endregion
     #region 
     public float spawnDelay = 8f;
-    private Coroutine spawnCoroutine; 
+    private Coroutine spawnCoroutine;
+    [SerializeField] private GameObject spawnVFX ;
+    int previousIndex = -1;
+    private bool isGameRunning = true;
     #endregion
-    
+
 
 
     private void Start()
@@ -54,17 +57,17 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnRandomObstacles()
     {
-
+        
         for (int i = 0; i < randomObsSpawnPts.Length; i++)
         {
             Vector2 spawnpos = new Vector2(randomObsSpawnPts[i].position.x, randomObsSpawnPts[i].position.y);
-            Instantiate(randomObsPrefab, spawnpos, Quaternion.identity);
+            StartCoroutine(RanddomSpawnDelay(spawnpos, i));
         }
     }
 
     IEnumerator SpawnDelay(float delay)
     {
-        while (true)
+        while (isGameRunning)
         {
             yield return new WaitForSeconds(delay);
             SpawnObstacles();
@@ -73,7 +76,10 @@ public class SpawnManager : MonoBehaviour
 
     void SpawnObstacles()
     {
-        int previousIndex = -1;
+        if (!isGameRunning)
+        {
+            return;
+        }
         int randomIndex;
             do
             {
@@ -98,15 +104,21 @@ public class SpawnManager : MonoBehaviour
             }
     }
 
+    private IEnumerator RanddomSpawnDelay(Vector2 spawnpos, int index)
+    {
+        yield return new WaitForSeconds(index* 1f);
+        GameObject spawnedVfx = Instantiate(spawnVFX, spawnpos, Quaternion.identity);
+        yield return new WaitForSeconds(0.2f);
+        Instantiate(randomObsPrefab, spawnpos, Quaternion.identity);
+        yield return new WaitForSeconds(1f);
+        Destroy(spawnedVfx);
+
+
+
+    }
     public void IncreaseSpawnDelay(float newDelay)
     {
-        // Stop the existing coroutine
-        
-
-        // Increase the spawn delay
         spawnDelay += newDelay;
-
-        // Start a new coroutine with the updated delay
         
         if (spawnCoroutine != null)
         {
@@ -118,6 +130,11 @@ public class SpawnManager : MonoBehaviour
     public float GetSpawnDelay()
     {
         return spawnDelay;
+    }
+
+    public void SetIsGameRunning(bool isRunning)
+    {
+        isGameRunning = isRunning;
     }
 
 }

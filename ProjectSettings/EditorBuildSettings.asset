@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/sarra.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/vamps_ui.unity
+    guid: 1e617c3025a2fd54d99507f0f65cff8c
+  - enabled: 1
+    path: Assets/Scenes/Test03.unity
+    guid: 02b97fb96db7b4d418e4a54d6557f0b6
   m_configObjects: {}
